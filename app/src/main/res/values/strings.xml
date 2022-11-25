@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CyberGardenHack</string>
+    <string name="title_mail">E-mail</string>
+    <string name="title_pass">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="checkIn">Отметиться</string>
+    <string name="input_code_title">Введите код</string>
+</resources>
