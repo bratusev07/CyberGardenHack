@@ -1,4 +1,4 @@
-package ru.bratusev.cybergardenhack;
+package ru.bratusev.cybergardenhack.services.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import ru.bratusev.cybergardenhack.R;
 
 public class StudentsAdapter extends BaseAdapter {
 

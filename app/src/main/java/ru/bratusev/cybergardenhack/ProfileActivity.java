@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,6 +24,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import ru.bratusev.cybergardenhack.models.LectureModel;
+import ru.bratusev.cybergardenhack.services.adapter.StudentsAdapter;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView userImage;
@@ -31,7 +35,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private Verification verificationCode;
     private ListView group_list;
     private ViewFlipper flipper;
+    private int pos = 0;
+    private ArrayList<LectureModel> lectureModels;
     private boolean isTeacher = true;
+    private ArrayList<String> students;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,39 +54,95 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         inputCode = findViewById(R.id.accountFragment_codeInput);
         group_list = findViewById(R.id.group_list);
         flipper = findViewById(R.id.lectureList);
+        findViewById(R.id.arrow_back).setOnClickListener(this);
+        findViewById(R.id.arrow_forward).setOnClickListener(this);
 
-        if (isTeacher){
+        if (isTeacher) {
             inputCode.setVisibility(View.INVISIBLE);
             group_list.setVisibility(View.VISIBLE);
             setListAdapter();
-        }else{
+        } else {
             inputCode.setVisibility(View.VISIBLE);
             group_list.setVisibility(View.INVISIBLE);
             inputCode.setOnClickListener(this);
         }
 
-        Glide.with(getApplicationContext()).load("https://sun9-north.userapi.com/sun9-88/s/v1/if1/dCN6648LL39Vs8p12OZ51Qn1a__5opFqpV5NZbj57KaObhi-JaxoBTqxDSvNaGkyHPM6k2vo.jpg?size=606x1080&quality=96&type=album").into(userImage);
         fillData();
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setListAdapter(){
+    private void setListAdapter() {
         group_list.setAdapter(new StudentsAdapter(getApplicationContext(), fillArray()));
-        flipper.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()){
+
+        group_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                onStudentClick((String) adapterView.getItemAtPosition(i));
+            }
+        });
+        flipper.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
             @Override
             public void onSwipeLeft() {
-
+                if (pos < lectureModels.size() - 1) {
+                    pos++;
+                    updateData();
+                }
             }
 
             @Override
             public void onSwipeRight() {
-
+                if (pos > 0) {
+                    pos--;
+                    updateData();
+                }
             }
         });
     }
 
-    private ArrayList<String> fillArray(){
-        ArrayList<String> students = new ArrayList<>();
+    private ArrayList<String> fillArray() {
+        students = new ArrayList<>();
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
+        students.add("Иванов Василий Семёнович");
+        students.add("Пупкин Иван Сергеевич");
+        students.add("Петров Петр Витальевич");
+        students.add("Орешков Константин Викторович");
+        students.add("Сидоров Сидор Сидорович");
+        students.add("Гениальный Гений Гениевич");
         students.add("Иванов Василий Семёнович");
         students.add("Пупкин Иван Сергеевич");
         students.add("Петров Петр Витальевич");
@@ -103,6 +166,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onClick(View view) {
                         verificationCode = promptsView.findViewById(R.id.code_inputText);
+                        alertDialog.cancel();
                         Toast.makeText(ProfileActivity.this, verificationCode.getPhoneCode(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -111,8 +175,44 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    private void onStudentClick(String student) {
+        View promptsView = View.inflate(getApplicationContext(), R.layout.remove_student_dialog, null);
+        AlertDialog alertDialog = new AlertDialog.Builder(ProfileActivity.this)
+                .setView(promptsView)
+                .create();
+
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        promptsView.findViewById(R.id.removeSuccess_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                students.remove(student);
+                group_list.setAdapter(new StudentsAdapter(getApplicationContext(), students));
+                alertDialog.cancel();
+                Toast.makeText(ProfileActivity.this, "Студент был удалён с пары", Toast.LENGTH_SHORT).show();
+            }
+        });
+        promptsView.findViewById(R.id.removeCancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
+        alertDialog.show();
+    }
+
     private void fillData() {
+        Glide.with(getApplicationContext()).load("https://sun9-north.userapi.com/sun9-88/s/v1/if1/dCN6648LL39Vs8p12OZ51Qn1a__5opFqpV5NZbj57KaObhi-JaxoBTqxDSvNaGkyHPM6k2vo.jpg?size=606x1080&quality=96&type=album").into(userImage);
         userName.setText("Братусев Денис Витальевич");
+
+        lectureModels = new ArrayList<>();
+        lectureModels.add(new LectureModel("Первая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Вторая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Третья пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Чевертая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Пятая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Шестая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Седьмая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
+        lectureModels.add(new LectureModel("Восьмая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
     }
 
     @Override
@@ -122,12 +222,32 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 onInputCodeClick();
             }
             break;
+            case R.id.arrow_forward:
+                if (pos < lectureModels.size() - 1) {
+                    pos++;
+                    updateData();
+                }
+                break;
+            case R.id.arrow_back:
+                if (pos > 0) {
+                    pos--;
+                    updateData();
+                }
+                break;
         }
     }
 
     @Override
     public void onBackPressed() {
 
+    }
+
+    private void updateData() {
+        ((TextView) findViewById(R.id.para)).setText(lectureModels.get(pos).getPara());
+        ((TextView) findViewById(R.id.cabinet)).setText(lectureModels.get(pos).getCabinet());
+        ((TextView) findViewById(R.id.sines)).setText(lectureModels.get(pos).getSines());
+        ((TextView) findViewById(R.id.time)).setText(lectureModels.get(pos).getTime());
+        ((TextView) findViewById(R.id.teacher)).setText(lectureModels.get(pos).getTeacher());
     }
 
     public class OnSwipeTouchListener implements View.OnTouchListener {

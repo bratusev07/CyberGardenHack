@@ -6,4 +6,7 @@
     <string name="checkIn">Отметиться</string>
     <string name="input_code_title">Введите код</string>
     <string name="remember_me">Запомнить меня?</string>
+    <string name="remove_student">Удалить студента?</string>
+    <string name="success">Подтвердить</string>
+    <string name="cancel"><u>Отменить</u></string>
 </resources>
