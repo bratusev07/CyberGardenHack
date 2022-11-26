@@ -37,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private ViewFlipper flipper;
     private int pos = 0;
     private ArrayList<LectureModel> lectureModels;
-    private boolean isTeacher = true;
+    private boolean isTeacher = false;
     private ArrayList<String> students;
 
     @Override
@@ -65,12 +65,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             inputCode.setVisibility(View.VISIBLE);
             group_list.setVisibility(View.INVISIBLE);
             inputCode.setOnClickListener(this);
+            setFlipperAdapter();
         }
 
         fillData();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void setListAdapter() {
         group_list.setAdapter(new StudentsAdapter(getApplicationContext(), fillArray()));
 
@@ -80,6 +80,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 onStudentClick((String) adapterView.getItemAtPosition(i));
             }
         });
+        setFlipperAdapter();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setFlipperAdapter() {
         flipper.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
             @Override
             public void onSwipeLeft() {
