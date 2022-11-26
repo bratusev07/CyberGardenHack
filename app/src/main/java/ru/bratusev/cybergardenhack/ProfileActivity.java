@@ -10,7 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,8 +28,13 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.bratusev.cybergardenhack.models.CalendarModel;
 import ru.bratusev.cybergardenhack.models.LectureModel;
 import ru.bratusev.cybergardenhack.services.adapter.StudentsAdapter;
+import ru.bratusev.cybergardenhack.services.network.NetworkServices;
 import ru.bratusev.cybergardenhack.services.qrScanner.QrScanner;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
@@ -51,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        findViews();
+        getCalendar();//findViews();
     }
 
     private void findViews() {
@@ -202,6 +209,33 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void getCalendar(){
+        NetworkServices.getInstance().getJSONApi().getCalendar().enqueue(new Callback<CalendarModel>() {
+            @Override
+            public void onResponse(Call<CalendarModel> call, Response<CalendarModel> response) {
+                if(response.code()/100 == 2){
+                   CalendarModel calendarModel = response.body();
+                   ArrayList<LectureModel> lectures = new ArrayList<>();
+                   lectures.add(calendarModel.get_1());
+                   lectures.add(calendarModel.get_2());
+                   lectures.add(calendarModel.get_3());
+                   lectures.add(calendarModel.get_4());
+                   lectures.add(calendarModel.get_5());
+                   lectures.add(calendarModel.get_6());
+                   lectures.add(calendarModel.get_7());
+                   lectureModels = lectures;
+                   setFlipperAdapter();
+                }else Toast.makeText(ProfileActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<CalendarModel> call, Throwable t) {
+                Log.d("networking", t.getMessage());
+                Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void onStudentClick(String student) {
         View promptsView = View.inflate(getApplicationContext(), R.layout.remove_student_dialog, null);
         AlertDialog alertDialog = new AlertDialog.Builder(ProfileActivity.this)
@@ -231,7 +265,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Glide.with(getApplicationContext()).load("https://sun9-north.userapi.com/sun9-88/s/v1/if1/dCN6648LL39Vs8p12OZ51Qn1a__5opFqpV5NZbj57KaObhi-JaxoBTqxDSvNaGkyHPM6k2vo.jpg?size=606x1080&quality=96&type=album").into(userImage);
         userName.setText("Братусев Денис Витальевич");
 
-        lectureModels = new ArrayList<>();
+        /*lectureModels = new ArrayList<>();
         lectureModels.add(new LectureModel("Первая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
         lectureModels.add(new LectureModel("Вторая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
         lectureModels.add(new LectureModel("Третья пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
@@ -240,7 +274,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         lectureModels.add(new LectureModel("Шестая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
         lectureModels.add(new LectureModel("Седьмая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
         lectureModels.add(new LectureModel("Восьмая пара", "Д-419", "пр. Программирование на языке Java", "09:50-11:25", "Шкурко А. Н."));
-    }
+    */}
 
     @Override
     public void onClick(View view) {

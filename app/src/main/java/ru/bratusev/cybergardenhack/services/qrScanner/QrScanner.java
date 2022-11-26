@@ -98,10 +98,8 @@ public class QrScanner extends AppCompatActivity {
                 Intent intent = new Intent();
                 if (qrcodes.size() != 0) {
                     link = qrcodes.valueAt(0).rawValue;
-
-                    List<String> qrMess = Arrays.asList(link.split(" "));
-                    if (qrMess.get(0).equals("Night_Raid")) {
-                        intent.putExtra("link", qrMess.get(1));
+                    if (link.contains("Night_Raid")) {
+                        intent.putExtra("link", link);
                         setResult(3, intent);
                         finish();
                     } else
