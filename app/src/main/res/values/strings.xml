@@ -4,7 +4,7 @@
     <string name="title_pass">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="checkIn">Отметиться</string>
-    <string name="input_code_title">Введите код</string>
+    <string name="input_code_title">Введи или отсканируй код</string>
     <string name="remember_me">Запомнить меня?</string>
     <string name="remove_student">Удалить студента?</string>
     <string name="success">Подтвердить</string>

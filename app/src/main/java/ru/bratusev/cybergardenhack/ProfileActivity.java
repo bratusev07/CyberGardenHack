@@ -1,11 +1,13 @@
 package ru.bratusev.cybergardenhack;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 
 import ru.bratusev.cybergardenhack.models.LectureModel;
 import ru.bratusev.cybergardenhack.services.adapter.StudentsAdapter;
+import ru.bratusev.cybergardenhack.services.qrScanner.QrScanner;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,6 +42,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<LectureModel> lectureModels;
     private boolean isTeacher = false;
     private ArrayList<String> students;
+
+    private final int CODE = 3;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,11 +168,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 View promptsView = View.inflate(getApplicationContext(), R.layout.code_input_dialog, null);
-                AlertDialog alertDialog = new AlertDialog.Builder(ProfileActivity.this)
+                alertDialog = new AlertDialog.Builder(ProfileActivity.this)
                         .setView(promptsView)
                         .create();
 
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                promptsView.findViewById(R.id.qr_scanner).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivityForResult(new Intent(getApplicationContext(), QrScanner.class), CODE);
+                    }
+                });
                 promptsView.findViewById(R.id.codeSuccess_button).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -178,6 +190,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 alertDialog.show();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 3) {
+            String link = data.getStringExtra("link");
+            alertDialog.cancel();
+            Toast.makeText(this, link, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onStudentClick(String student) {
